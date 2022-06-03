@@ -10,10 +10,7 @@ const Menu = () => {
         <Container className="vh-100 d-flex align-items-center justify-content-center">
             <Row className='w-75'>
                 <Col className="rounded mx-5 my-3 text-center fs-5">
-                    <Button as={Link} to={"/game-local"}>Local game</Button>
-                </Col>
-                <Col className="rounded mx-5 my-3 text-center fs-5">
-                    <Button as={Link} to={"/game-online"}>Online game</Button>
+                    <Button as={Link} to={"/game"}>Start game</Button>
                 </Col>
             </Row>
         </Container>
