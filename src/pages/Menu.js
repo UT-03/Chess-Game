@@ -2,18 +2,18 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Nav from 'react-bootstrap/Nav';
+import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 
 const Menu = () => {
     return (
-        <Container>
-            <Row>
+        <Container className="vh-100 d-flex align-items-center justify-content-center">
+            <Row className='w-75'>
                 <Col className="rounded mx-5 my-3 text-center fs-5">
-                    <Nav.Link as={Link} to={"/game-local"}>Local game</Nav.Link>
+                    <Button as={Link} to={"/game-local"}>Local game</Button>
                 </Col>
                 <Col className="rounded mx-5 my-3 text-center fs-5">
-                    <Nav.Link as={Link} to={"/game-online"}>Online game</Nav.Link>
+                    <Button as={Link} to={"/game-online"}>Online game</Button>
                 </Col>
             </Row>
         </Container>
