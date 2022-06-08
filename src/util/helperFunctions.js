@@ -15,13 +15,6 @@ export const getKingPosition = (player, boardArray) => {
     }
 }
 
-const getRivalPieceId = (i) => {
-    if (i === 1)
-        return 2;
-    else
-        return 1;
-}
-
 const findPathFuncs = (param, x, y, boardArray) => {
     const showPathArray = [
         [0, 0, 0, 0, 0, 0, 0, 0],
@@ -56,12 +49,10 @@ export const isPlayerCheckmated = (player, boardArray) => {
         for (let m = 0; m <= 7 && isPlayerCheckmated; m++) {
             if (Math.floor(boardArray[l][m] / 10) === player) {
                 let showPathArray$ = findPathFuncs(Math.floor(boardArray[l][m] % 10), l, m, boardArray)
-                // console.log(l, m, boardArray[l][m], isPlayerCheckmated, showPathArray$);
 
                 for (let p = 0; p <= 7 && isPlayerCheckmated; p++) {
                     for (let q = 0; q <= 7 && isPlayerCheckmated; q++) {
-                        // console.log(showPathArray$[p][q])
-                        if (showPathArray$[p][q] === 1)
+                        if (showPathArray$[p][q] !== 0)
                             isPlayerCheckmated = false;
                     }
                 }

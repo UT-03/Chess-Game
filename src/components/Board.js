@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
+import Card from 'react-bootstrap/Card';
 
 import { findKingsPath, findQueensPath, findBishopsPath, findKnightsPath, findRooksPath, findPawnsPath, isKingSafe, isPlayerCheckmated } from '../util/helperFunctions';
 import BoardGrid from './BoardGrids';
@@ -16,11 +17,6 @@ const Board = () => {
         [16, 16, 16, 16, 16, 16, 16, 16],
         [15, 14, 13, 12, 11, 13, 14, 15],
     ]);
-
-    // if (boardArray) {
-    //     const { i, j } = { ...getKingPosition(1, boardArray) };
-    //     console.log(isKingSafe(i, j, boardArray));
-    // }
 
     const [showPath, setShowPath] = useState(false);
     const [showPathArray, setShowPathArray] = useState([
@@ -47,6 +43,7 @@ const Board = () => {
     });
     const [isWhiteUnderCheck, setIsWhiteUnderCheck] = useState(false);
     const [isBlackUnderCheck, setIsBlackUnderCheck] = useState(false);
+    const [isPlayerCheckmatedStatus, setIsPlayerCheckmatedStatus] = useState(0);
 
     useEffect(() => {
         console.log("white king: ", whiteKingPosition.row, whiteKingPosition.col);
@@ -59,14 +56,18 @@ const Board = () => {
 
         // check if white is checkmated
         if (isWhiteUnderCheck) {
-            if (isPlayerCheckmated(1, boardArray))
+            if (isPlayerCheckmated(1, boardArray)) {
                 console.log("White checkmated");
+                setIsPlayerCheckmatedStatus(1);
+            }
         }
 
         // check if black is checkmated
         if (isBlackUnderCheck) {
-            if (isPlayerCheckmated(2, boardArray))
-                console.log("Black checkmated");
+            if (isPlayerCheckmated(2, boardArray)) {
+                console.log("Black checkmated")
+                setIsPlayerCheckmatedStatus(2);
+            }
         }
     }, [isBlackUnderCheck, isWhiteUnderCheck]);
 
@@ -196,6 +197,8 @@ const Board = () => {
     }
 
     const gridBoxClickHandler = (x, y) => {
+        if (isPlayerCheckmatedStatus !== 0)
+            return;
         if (!showPath) {
             if (boardArray[x][y] !== 0 && (Math.floor(boardArray[x][y] / 10) === activePlayer))
                 showPathFunc(x, y);
@@ -251,6 +254,22 @@ const Board = () => {
                     isBlackUnderCheck={isBlackUnderCheck}
                     blackKingPosition={blackKingPosition} />
             </Container>
+            <Card
+                style={{ width: '18rem' }}
+                className="my-3 mx-auto"
+            >
+                <Card.Body>
+                    <Card.Title>
+                        {activePlayer === 1 && "White's turn"}
+                        {activePlayer === 2 && "Black's turn"}
+                    </Card.Title>
+                    <Card.Text>
+                        {(isWhiteUnderCheck || isBlackUnderCheck) && isPlayerCheckmatedStatus === 0 && "Check"}
+                        {isPlayerCheckmatedStatus === 1 && "CHECKMATE- Black wins"}
+                        {isPlayerCheckmatedStatus === 2 && "CHECKMATE- White wins"}
+                    </Card.Text>
+                </Card.Body>
+            </Card>
         </React.Fragment>
     )
 }
