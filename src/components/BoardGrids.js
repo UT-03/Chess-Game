@@ -52,9 +52,7 @@ const BoardGrid = (props) => {
 
     const gridboxSizeHandler = () => {
         let windowWidth = window.innerWidth;
-        if (windowWidth > 1500)
-            setSizeOfGridbox(100);
-        else if (windowWidth > 1000)
+        if (windowWidth > 1000)
             setSizeOfGridbox(80);
         else if (windowWidth > 600)
             setSizeOfGridbox(65)
