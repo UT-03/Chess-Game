@@ -5,6 +5,8 @@ import Card from 'react-bootstrap/Card';
 import { findKingsPath, findQueensPath, findBishopsPath, findKnightsPath, findRooksPath, findPawnsPath, isKingSafe, isPlayerCheckmated } from '../util/helperFunctions';
 import BoardGrid from './BoardGrids';
 import PawnPromoteChoiceModal from './PawnPromoteChoiceModal';
+import Header from './Header';
+import SettingsModal from './SettingsModal';
 
 const Board = () => {
     const [boardArray, setBoardArray] = useState([
@@ -44,20 +46,13 @@ const Board = () => {
     const [isWhiteUnderCheck, setIsWhiteUnderCheck] = useState(false);
     const [isBlackUnderCheck, setIsBlackUnderCheck] = useState(false);
     const [isPlayerCheckmatedStatus, setIsPlayerCheckmatedStatus] = useState(0);
+    const [showSettingsModal, setShowSettingsModal] = useState(false);
+    const [isRotateOn, setIsRotateOn] = useState(true);
 
     useEffect(() => {
-        console.log("white king: ", whiteKingPosition.row, whiteKingPosition.col);
-        console.log("black king: ", blackKingPosition.row, blackKingPosition.col);
-    }, [whiteKingPosition, blackKingPosition]);
-
-    useEffect(() => {
-        console.log("white king under check: ", isWhiteUnderCheck);
-        console.log("black king under check: ", isBlackUnderCheck);
-
         // check if white is checkmated
         if (isWhiteUnderCheck) {
             if (isPlayerCheckmated(1, boardArray)) {
-                console.log("White checkmated");
                 setIsPlayerCheckmatedStatus(1);
             }
         }
@@ -65,7 +60,6 @@ const Board = () => {
         // check if black is checkmated
         if (isBlackUnderCheck) {
             if (isPlayerCheckmated(2, boardArray)) {
-                console.log("Black checkmated")
                 setIsPlayerCheckmatedStatus(2);
             }
         }
@@ -237,9 +231,17 @@ const Board = () => {
                 show={showPromotePawnChoiceModal}
                 onSubmit={promotePiece}
             />
+            <SettingsModal
+                show={showSettingsModal}
+                onHide={() => setShowSettingsModal(false)}
+                changeRotateStatus={(status) => setIsRotateOn(status)}
+                isRotateOn={isRotateOn}
+            />
+            <Header
+                showSettingsModal={() => setShowSettingsModal(true)} />
             <Container
                 style={{
-                    transform: `rotate(${activePlayer === 2 ? 180 : 0}deg)`,
+                    transform: `${isRotateOn ? `rotate(${activePlayer === 2 ? 180 : 0}deg)` : 'rotate(0deg)'}`,
                     transition: "all 1s"
                 }}
             >
@@ -252,7 +254,8 @@ const Board = () => {
                     isWhiteUnderCheck={isWhiteUnderCheck}
                     whiteKingPosition={whiteKingPosition}
                     isBlackUnderCheck={isBlackUnderCheck}
-                    blackKingPosition={blackKingPosition} />
+                    blackKingPosition={blackKingPosition}
+                    isRotateOn={isRotateOn} />
             </Container>
             <Card
                 style={{ width: '18rem' }}

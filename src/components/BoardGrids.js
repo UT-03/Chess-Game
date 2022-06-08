@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
@@ -46,15 +46,40 @@ const PIECE_IMAGE = {
     26: pawn_black,
 }
 
-const SIZE_OF_GRIDBOX = 80;
 
 const BoardGrid = (props) => {
+    const [sizeOfGridbox, setSizeOfGridbox] = useState(null);
+
+    const gridboxSizeHandler = () => {
+        let windowWidth = window.innerWidth;
+        if (windowWidth > 1500)
+            setSizeOfGridbox(100);
+        else if (windowWidth > 1000)
+            setSizeOfGridbox(80);
+        else if (windowWidth > 600)
+            setSizeOfGridbox(65)
+        else if (windowWidth > 500)
+            setSizeOfGridbox(58)
+        else if (windowWidth > 400)
+            setSizeOfGridbox(45)
+        else if (windowWidth > 300)
+            setSizeOfGridbox(33)
+        else
+            setSizeOfGridbox(25)
+    }
+
+    useEffect(() => {
+        gridboxSizeHandler();
+    }, [])
+
+    window.addEventListener('resize', gridboxSizeHandler);
+
     let boardsEls = props.boardArray.map((row, i) => {
         return (
             <Row
                 className='m-auto'
                 style={{
-                    width: `${SIZE_OF_GRIDBOX * 8}px`
+                    width: `${sizeOfGridbox * 8}px`
                 }}
                 key={i}>
                 {row.map((col, j) => {
@@ -78,8 +103,8 @@ const BoardGrid = (props) => {
                         <Col
                             className='p-0 text-center d-flex justify-content-center align-items-center position-relative'
                             style={{
-                                width: `${SIZE_OF_GRIDBOX}px`,
-                                height: `${SIZE_OF_GRIDBOX}px`,
+                                width: `${sizeOfGridbox}px`,
+                                height: `${sizeOfGridbox}px`,
                                 ...gridBoxStyles
                             }}
                             key={j}
@@ -98,12 +123,13 @@ const BoardGrid = (props) => {
                                         display: ((props.showPath && (props.showPathArray[i][j] === 1 || props.showPathArray[i][j] === -1 || props.showPathArray[i][j] === 2)) || isGridUnderCheck) ? "block" : "none"
                                     }}
                                 ></div>
-                                {/* i={i},<wbr />j={j},<wbr />p={props.boardArray[i][j]} */}
                                 {props.boardArray[i][j] !== 0 && (
                                     <Image src={PIECE_IMAGE[props.boardArray[i][j]]}
                                         style={{
-                                            transform: `rotate(${props.activePlayer === 2 ? 180 : 0}deg)`,
-                                            transition: "all 1s"
+                                            width: "100%",
+                                            transform: `${props.isRotateOn ? `rotate(${props.activePlayer === 2 ? 180 : 0}deg)` : Math.floor(props.boardArray[i][j] / 10) === 2 ? 'rotate(180deg)' : ''}`,
+                                            transition: `${props.isRotateOn ? 'all 1s' : ''}`,
+                                            zIndex: 10
                                         }}
                                     />
                                 )}
