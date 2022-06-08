@@ -1,55 +1,9 @@
-import king_white from '../assets/images/king_white.png';
-import queen_white from '../assets/images/queen_white.png';
-import bishop_white from '../assets/images/bishop_white.png';
-import knight_white from '../assets/images/knight_white.png';
-import rook_white from '../assets/images/rook_white.png';
-import pawn_white from '../assets/images/pawn_white.png';
-
-import king_black from '../assets/images/king_black.png';
-import queen_black from '../assets/images/queen_black.png';
-import bishop_black from '../assets/images/bishop_black.png';
-import knight_black from '../assets/images/knight_black.png';
-import rook_black from '../assets/images/rook_black.png';
-import pawn_black from '../assets/images/pawn_black.png';
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Image from 'react-bootstrap/Image';
 
-import { showKingsPath, showQueensPath, showBishopsPath, showKnightsPath, showRooksPath, showPawnsPath } from '../util/helperFunctions';
-
-/*
-white will have 1 at first place
-black will have 2 at first digit
-
-2nd digit:
-king-1
-queen-2
-bishop-3
-knight-4
-rook-5
-pawn-6
-*/
-
-const PIECE_IMAGE = {
-    11: king_white,
-    12: queen_white,
-    13: bishop_white,
-    14: knight_white,
-    15: rook_white,
-    16: pawn_white,
-
-    21: king_black,
-    22: queen_black,
-    23: bishop_black,
-    24: knight_black,
-    25: rook_black,
-    26: pawn_black,
-}
-
-const SIZE_OF_GRIDBOX = 80;
+import { findKingsPath, findQueensPath, findBishopsPath, findKnightsPath, findRooksPath, findPawnsPath, isKingSafe, isPlayerCheckmated } from '../util/helperFunctions';
+import BoardGrid from './BoardGrids';
+import PawnPromoteChoiceModal from './PawnPromoteChoiceModal';
 
 const Board = () => {
     const [boardArray, setBoardArray] = useState([
@@ -62,6 +16,12 @@ const Board = () => {
         [16, 16, 16, 16, 16, 16, 16, 16],
         [15, 14, 13, 12, 11, 13, 14, 15],
     ]);
+
+    // if (boardArray) {
+    //     const { i, j } = { ...getKingPosition(1, boardArray) };
+    //     console.log(isKingSafe(i, j, boardArray));
+    // }
+
     const [showPath, setShowPath] = useState(false);
     const [showPathArray, setShowPathArray] = useState([
         [0, 0, 0, 0, 0, 0, 0, 0],
@@ -75,6 +35,60 @@ const Board = () => {
     ]);
     const [activePlayer, setActivePlayer] = useState(1);
     const [activePiece, setActivePiece] = useState();
+    const [data, setData] = useState();
+    const [showPromotePawnChoiceModal, setShowPromotePawnChoiceModal] = useState(false);
+    const [whiteKingPosition, setWhiteKingPosition] = useState({
+        row: 7,
+        col: 4
+    });
+    const [blackKingPosition, setBlackKingPosition] = useState({
+        row: 0,
+        col: 4
+    });
+    const [isWhiteUnderCheck, setIsWhiteUnderCheck] = useState(false);
+    const [isBlackUnderCheck, setIsBlackUnderCheck] = useState(false);
+
+    useEffect(() => {
+        console.log("white king: ", whiteKingPosition.row, whiteKingPosition.col);
+        console.log("black king: ", blackKingPosition.row, blackKingPosition.col);
+    }, [whiteKingPosition, blackKingPosition]);
+
+    useEffect(() => {
+        console.log("white king under check: ", isWhiteUnderCheck);
+        console.log("black king under check: ", isBlackUnderCheck);
+
+        // check if white is checkmated
+        if (isWhiteUnderCheck) {
+            if (isPlayerCheckmated(1, boardArray))
+                console.log("White checkmated");
+        }
+
+        // check if black is checkmated
+        if (isBlackUnderCheck) {
+            if (isPlayerCheckmated(2, boardArray))
+                console.log("Black checkmated");
+        }
+    }, [isBlackUnderCheck, isWhiteUnderCheck]);
+
+    const checkHandler = () => {
+        if (isKingSafe(whiteKingPosition.row, whiteKingPosition.col, boardArray)) {
+            setIsWhiteUnderCheck(false);
+        }
+        else {
+            setIsWhiteUnderCheck(true);
+        }
+
+        if (isKingSafe(blackKingPosition.row, blackKingPosition.col, boardArray)) {
+            setIsBlackUnderCheck(false);
+        }
+        else {
+            setIsBlackUnderCheck(true);
+        }
+    }
+
+    useEffect(() => {
+        checkHandler();
+    }, [boardArray]);
 
     const toggleActivePlayer = () => {
         setActivePlayer(prevState => {
@@ -85,35 +99,33 @@ const Board = () => {
         })
     }
 
-    const showPathFunc = (i, j) => {
+    const findPathFuncs = (param, x, y) => {
+        switch (param) {
+            case 1:
+                return findKingsPath(x, y, boardArray, showPathArray);
+            case 2:
+                return findQueensPath(x, y, boardArray, showPathArray);
+            case 3:
+                return findBishopsPath(x, y, boardArray, showPathArray);
+            case 4:
+                return findKnightsPath(x, y, boardArray, showPathArray);
+            case 5:
+                return findRooksPath(x, y, boardArray, showPathArray);
+            case 6:
+                return findPawnsPath(x, y, boardArray, showPathArray);
+        }
+    }
+
+    // show path for the piece at (x,y)
+    const showPathFunc = (x, y) => {
         setActivePiece({
-            row: i,
-            col: j
+            row: x,
+            col: y
         })
 
-        switch (boardArray[i][j] % 10) {
-            case 1:
-                showKingsPath(i, j, boardArray, showPathArray, setShowPathArray, setShowPath);
-                break;
-            case 2:
-                showQueensPath(i, j, boardArray, showPathArray, setShowPathArray, setShowPath);
-                break;
-            case 3:
-                showBishopsPath(i, j, boardArray, showPathArray, setShowPathArray, setShowPath);
-                break;
-            case 4:
-                showKnightsPath(i, j, boardArray, showPathArray, setShowPathArray, setShowPath);
-                break;
-            case 5:
-                showRooksPath(i, j, boardArray, showPathArray, setShowPathArray, setShowPath);
-                break;
-            case 6:
-                showPawnsPath(i, j, boardArray, showPathArray, setShowPathArray, setShowPath);
-                break;
-            default:
-                console.log("default");
-                break;
-        }
+        const showPathArray$ = findPathFuncs(Math.floor(boardArray[x][y] % 10), x, y);
+        setShowPath(true);
+        setShowPathArray(showPathArray$);
     }
 
     const hidePathFunc = () => {
@@ -130,113 +142,114 @@ const Board = () => {
         setShowPath(false);
     }
 
-    const movePiece = (i, j) => {
+    //  move the active piece to (x,y)
+    const movePiece = (x, y) => {
         let boardArray$ = [...boardArray];
 
-        boardArray$[i][j] = boardArray$[activePiece.row][activePiece.col];
+        // if active piece is king
+        if (Math.floor(boardArray$[activePiece.row][activePiece.col]) % 10 === 1) {
+            if (activePlayer === 1)
+                setWhiteKingPosition(() => {
+                    return {
+                        row: x,
+                        col: y
+                    }
+                });
+            else
+                setBlackKingPosition(() => {
+                    return {
+                        row: x,
+                        col: y
+                    }
+                });
+        }
+
+        boardArray$[x][y] = boardArray$[activePiece.row][activePiece.col];
         boardArray$[activePiece.row][activePiece.col] = 0;
 
         setBoardArray(() => boardArray$);
     }
 
-    const removePiece = (i, j) => {
+    // remove the piece at (x,y)
+    const removePiece = (x, y) => {
         let boardArray$ = [...boardArray];
 
-        boardArray$[i][j] = 0;
+        boardArray$[x][y] = 0;
 
         setBoardArray(() => boardArray$);
     }
 
-    const gridBoxClickHandler = (i, j) => {
+    const promotePiece = (event, choice) => {
+        event.preventDefault();
+
+        movePiece(data.row, data.col);
+
+        const boardArray$ = [...boardArray];
+        boardArray$[data.row][data.col] = activePlayer + choice;
+        setBoardArray(() => boardArray$);
+
+        hidePathFunc();
+        setShowPromotePawnChoiceModal(false);
+        setActivePiece(null);
+        setData(null);
+        toggleActivePlayer();
+    }
+
+    const gridBoxClickHandler = (x, y) => {
         if (!showPath) {
-            if (boardArray[i][j] !== 0 && (Math.floor(boardArray[i][j] / 10) === activePlayer))
-                showPathFunc(i, j);
+            if (boardArray[x][y] !== 0 && (Math.floor(boardArray[x][y] / 10) === activePlayer))
+                showPathFunc(x, y);
         }
-        else if (showPath) {
-            if (showPathArray[i][j] === 1) {
-                movePiece(i, j);
+        else {
+            if (showPathArray[x][y] === 1) {
+                movePiece(x, y);
                 toggleActivePlayer();
+                hidePathFunc();
+                setActivePiece(null);
             }
-            else if (showPathArray[i][j] === -1) {
-                removePiece(i, j);
-                movePiece(i, j);
+            else if (showPathArray[x][y] === -1) {
+                removePiece(x, y);
+                movePiece(x, y);
                 toggleActivePlayer();
+                hidePathFunc();
+                setActivePiece(null);
             }
-            hidePathFunc();
-            setActivePiece(null);
+            else if (showPathArray[x][y] === 2) {
+                setShowPromotePawnChoiceModal(true);
+                setData({
+                    row: x,
+                    col: y
+                });
+            }
+            else {
+                hidePathFunc();
+                setActivePiece(null);
+            }
         }
     }
 
-    let boardsEls = boardArray.map((row, i) => {
-        return (
-            <Row
-                className='m-auto'
-                style={{
-                    width: `${SIZE_OF_GRIDBOX * 8}px`
-                }}
-                key={i}>
-                {row.map((col, j) => {
-                    let gridBoxStyles = {};
-                    if ((i + j) % 2 === 0)
-                        gridBoxStyles = {
-                            backgroundColor: "#eeeed2"
-                        }
-                    else
-                        gridBoxStyles = {
-                            backgroundColor: "#769656"
-                        }
-
-                    return (
-                        <Col
-                            className='p-0 text-center d-flex justify-content-center align-items-center position-relative'
-                            style={{
-                                width: `${SIZE_OF_GRIDBOX}px`,
-                                height: `${SIZE_OF_GRIDBOX}px`,
-                                ...gridBoxStyles
-                            }}
-                            key={j}
-                            onClick={() => gridBoxClickHandler(i, j)}
-                        >
-                            <React.Fragment>
-                                <div
-                                    style={{
-                                        position: "absolute",
-                                        height: "100%",
-                                        width: "100%",
-                                        top: "0",
-                                        left: "0",
-                                        backgroundColor: showPathArray[i][j] === -1 ? "red" : (showPathArray[i][j] === 1 ? "#0000005e" : "#ab00ff5e"),
-                                        boxShadow: "inset 2px 2px 10px 2px #ffffffa3, inset -2px -2px 10px 2px #ffffffa3",
-                                        display: (showPath && (showPathArray[i][j] === 1 || showPathArray[i][j] === -1 || showPathArray[i][j] === 2)) ? "block" : "none"
-                                    }}
-                                ></div>
-                                {boardArray[i][j] !== 0 && (
-                                    <Image src={PIECE_IMAGE[boardArray[i][j]]}
-                                        style={{
-                                            transform: `rotate(${activePlayer === 2 ? 180 : 0}deg)`,
-                                            transition: "all 1s"
-                                        }}
-                                    />
-                                )}
-                            </React.Fragment>
-                        </Col>
-                    )
-                })}
-            </Row>
-        )
-    })
-
     return (
         <React.Fragment>
+            <PawnPromoteChoiceModal
+                show={showPromotePawnChoiceModal}
+                onSubmit={promotePiece}
+            />
             <Container
                 style={{
                     transform: `rotate(${activePlayer === 2 ? 180 : 0}deg)`,
                     transition: "all 1s"
                 }}
             >
-                <div>
-                    {boardsEls}
-                </div>
+                <BoardGrid
+                    boardArray={boardArray}
+                    showPath={showPath}
+                    showPathArray={showPathArray}
+                    activePlayer={activePlayer}
+                    onGridClick={gridBoxClickHandler}
+                    isWhiteUnderCheck={isWhiteUnderCheck}
+                    whiteKingPosition={whiteKingPosition}
+                    isBlackUnderCheck={isBlackUnderCheck}
+                    blackKingPosition={blackKingPosition} />
             </Container>
         </React.Fragment>
     )
