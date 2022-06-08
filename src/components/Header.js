@@ -17,10 +17,9 @@ const Header = props => {
                         <Button variant="primary" onClick={props.showSettingsModal} className="my-2">
                             <Image src={settingsIcon} fluid style={{
                                 width: "25px",
-                                height: "25px",
-                                filter: "invert(100%) sepia(100%) saturate(0%) hue-rotate(162deg) brightness(101%) contrast(104%)",
-                                marginRight: "5px"
-                            }} />
+                                height: "25px"
+                            }}
+                                className='me-1' />
                             Settings
                         </Button>
                     </Nav>

@@ -20,8 +20,8 @@ const Menu = () => {
         >
             <Row className='w-75'>
                 <Col className="rounded mx-5 my-3 text-center fs-5">
-                    <Button as={Link} to={"/game"} className="me-2" style={{ backgroundColor: '#769656' }}>Start new game</Button>
-                    <Button as={Link} to={"/game"} style={{ backgroundColor: '#eeeed2' }}>Load game</Button>
+                    <Button as={Link} to={"/game"} className="me-2" variant='primary'>Start new game</Button>
+                    <Button as={Link} to={"/game"} variant='secondary'>Load game</Button>
                 </Col>
             </Row>
         </Container>

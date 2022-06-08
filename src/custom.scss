@@ -1,0 +1,34 @@
+// VARIABLE DECLARATIONS
+$light-green: #769656;
+$dark-green: #eeeed2;
+
+@import "~bootstrap/scss/functions";
+
+// DEFAULT VARIABLE OVERRIDING
+$primary: $light-green;
+$secondary: $dark-green;
+$input-btn-focus-box-shadow: none;
+$btn-box-shadow: none;
+$btn-focus-box-shadow: none;
+$btn-active-box-shadow: none;
+
+@import "~bootstrap/scss/variables";
+
+// VARIABLE OVERRIDING THAT REQUIRE BOOTSTRAP VARIABLES
+$input-focus-border-color: $gray-400;
+
+// IMPORTING THE BOOTSTRAP STYLESHEET
+@import "~bootstrap/scss/bootstrap.scss";
+
+// MIXINS
+
+
+// STYLINGS
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
