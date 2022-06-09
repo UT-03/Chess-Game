@@ -7,15 +7,15 @@ $dark-green: #eeeed2;
 // DEFAULT VARIABLE OVERRIDING
 $primary: $light-green;
 $secondary: $dark-green;
-$input-btn-focus-box-shadow: none;
-$btn-box-shadow: none;
-$btn-focus-box-shadow: none;
-$btn-active-box-shadow: none;
+// $input-btn-focus-box-shadow: none;
+// $btn-box-shadow: none;
+// $btn-focus-box-shadow: none;
+// $btn-active-box-shadow: none;
 
 @import "~bootstrap/scss/variables";
 
 // VARIABLE OVERRIDING THAT REQUIRE BOOTSTRAP VARIABLES
-$input-focus-border-color: $gray-400;
+// $input-focus-border-color: $gray-400;
 
 // IMPORTING THE BOOTSTRAP STYLESHEET
 @import "~bootstrap/scss/bootstrap.scss";

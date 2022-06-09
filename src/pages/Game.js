@@ -1,9 +1,11 @@
 import React from 'react';
 import Board from '../components/Board';
 
-const Game = () => {
+const Game = (props) => {
     return (
-        <Board />
+        <Board
+            isLoadedGame={props.isLoadedGame}
+            loadedGameData={props.loadedGameData} />
     );
 };
 

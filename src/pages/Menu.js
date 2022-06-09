@@ -1,30 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import { Link } from 'react-router-dom';
 import menuBackground from '../assets/images/menuBackground.jpg';
+import LoadGameModal from '../components/LoadGameModal';
 
-const Menu = () => {
+const Menu = props => {
+    const [showSaveGameModal, setShowSaveGameModal] = useState(false);
+
+    const navigate = useNavigate();
+
     return (
-        <Container
-            fluid
-            className="vh-100 d-flex align-items-center justify-content-center"
-            style={{
-                background: `url(${menuBackground})`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat'
-            }}
-        >
-            <Row className='w-75'>
-                <Col className="rounded mx-5 my-3 text-center fs-5">
-                    <Button as={Link} to={"/game"} className="me-2" variant='primary'>Start new game</Button>
-                    <Button as={Link} to={"/game"} variant='secondary'>Load game</Button>
-                </Col>
-            </Row>
-        </Container>
+        <React.Fragment>
+            <LoadGameModal
+                show={showSaveGameModal}
+                onHide={() => setShowSaveGameModal(false)}
+                onLoad={(gameData) => {
+                    props.setLoadedGameData(gameData);
+                    props.setIsLoadedGame(true);
+                    navigate('/game');
+                }} />
+            <Container
+                fluid
+                className="vh-100 d-flex align-items-center justify-content-center"
+                style={{
+                    background: `url(${menuBackground})`,
+                    backgroundPosition: 'center',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat'
+                }}
+            >
+                <Row className='w-75'>
+                    <Col className="rounded mx-5 my-3 text-center fs-5">
+                        <Button
+                            type='button'
+                            className="me-2"
+                            variant='primary'
+                            onClick={() => {
+                                props.setIsLoadedGame(false);
+                                navigate('/game');
+                            }}>New game</Button>
+                        <Button
+                            type='button'
+                            variant='secondary'
+                            onClick={() => setShowSaveGameModal(true)}>Load game</Button>
+                    </Col>
+                </Row>
+            </Container>
+        </React.Fragment>
     );
 };
 
