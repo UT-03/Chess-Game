@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
@@ -14,6 +15,9 @@ const Header = props => {
                 <Navbar.Brand>Chess</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="me-auto">
+                        <Nav.Link as={Link} to='/'>Home</Nav.Link>
+                    </Nav>
                     <Nav className="ms-auto">
                         <Button variant="primary" onClick={props.showSaveGameModal} className="my-2 mx-2">
                             <Image src={saveIcon} fluid style={{
@@ -23,7 +27,7 @@ const Header = props => {
                                 className='me-1' />
                             Save
                         </Button>
-                        <Button variant="primary" onClick={props.showSettingsModal} className="my-2">
+                        <Button variant="primary" onClick={props.showSettingsModal} className="my-2 mx-2">
                             <Image src={settingsIcon} fluid style={{
                                 width: "25px",
                                 height: "25px"
