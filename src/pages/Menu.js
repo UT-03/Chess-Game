@@ -24,7 +24,7 @@ const Menu = props => {
                 }} />
             <Container
                 fluid
-                className="vh-100 d-flex align-items-center justify-content-center"
+                className="pb-5 vh-100 d-flex flex-column align-items-center justify-content-end"
                 style={{
                     background: `url(${menuBackground})`,
                     backgroundPosition: 'center',
@@ -32,11 +32,11 @@ const Menu = props => {
                     backgroundRepeat: 'no-repeat'
                 }}
             >
-                <Row className='w-75'>
+                <Row className='w-lg-75 mb-5'>
                     <Col className="rounded mx-5 my-3 text-center fs-5">
                         <Button
                             type='button'
-                            className="me-2"
+                            className="my-1 mx-2 btn-lg"
                             variant='primary'
                             onClick={() => {
                                 props.setIsLoadedGame(false);
@@ -44,6 +44,7 @@ const Menu = props => {
                             }}>New game</Button>
                         <Button
                             type='button'
+                            className='my-1 mx-2 btn-lg'
                             variant='secondary'
                             onClick={() => setShowSaveGameModal(true)}>Load game</Button>
                     </Col>

@@ -338,7 +338,7 @@ const Board = (props) => {
                     </Container>
                     <Card
                         style={{ width: '18rem' }}
-                        className="my-3 mx-auto"
+                        className="my-3 mx-auto shadow-lg"
                     >
                         <Card.Body>
                             <Card.Title>
